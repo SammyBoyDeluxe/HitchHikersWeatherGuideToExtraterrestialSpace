@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootConstraintLayoutMenuFragment"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/black"
+    android:theme="@style/Theme.HitchhikersWeatherGuideToExtraterrestialSpace"
+    android:visibility="visible"
+    tools:context=".fragments.MenuFragment">
+
+    <LinearLayout
+        android:id="@+id/buttonLinearLayoutMenuFragment"
+        android:layout_width="238dp"
+        android:layout_height="318dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="414dp"
+        android:layout_marginEnd="50dp"
+        android:orientation="vertical"
+        android:paddingVertical="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/martianWeatherAPIButtonMenuFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/to_martian_weather_api_button_string_menu_fragment" />
+
+        <Button
+            android:id="@+id/shallowThoughtAPIButtonMenuFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/shallow_thought_api_button_menu_fragment_string"
+            tools:layout_editor_absoluteX="161dp"
+            tools:layout_editor_absoluteY="364dp" />
+
+        <Button
+            android:id="@+id/backToWelcomeFragmentButtonMenuFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/exo_2_medium"
+            android:text="@string/back_button_text_menu_fragment" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageViewTriangleLogoMenuFragment"
+        android:layout_width="246dp"
+        android:layout_height="390dp"
+        android:src="@drawable/hitchhikers_triangle_rocketlogo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+

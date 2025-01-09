@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.HitchhikersWeatherGuideToExtraterrestialSpace" parent="android:Theme.Material.Light.NoActionBar">
+        <!-- Primary colors -->
+        <item name="colorPrimary">#030303</item> <!-- Dark base -->
+        <item name="colorPrimaryVariant">#020202</item> <!-- Slightly lighter dark gray -->
+        <item name="colorOnPrimary">#FFFFFF</item> <!-- White for text on primary -->
+
+        <!-- Secondary colors -->
+        <item name="colorSecondary">#74B8CB</item> <!-- Light blue -->
+        <item name="colorSecondaryVariant">#5AA7B8</item> <!-- Slightly darker variant of light blue -->
+        <item name="colorOnSecondary">#FFFFFF</item> <!-- White for text on secondary -->
+
+        <!-- Background and surface -->
+        <item name="android:colorBackground">#000000</item> <!-- Pure black for space background -->
+        <item name="colorSurface">#030303</item> <!-- Matches Primary -->
+        <item name="colorOnSurface">#FFFFFF</item> <!-- White for text on surface -->
+
+        <!-- Error colors (default Material ones) -->
+        <item name="colorError">#D32F2F</item>
+        <item name="colorOnError">#FFFFFF</item> <!-- White for error text -->
+    </style>
+
+</resources>

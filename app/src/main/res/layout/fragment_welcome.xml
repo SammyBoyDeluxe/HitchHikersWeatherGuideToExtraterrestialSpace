@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+
+    android:id="@+id/welcomeRootConstraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:background="@drawable/hitchhikers_book_cover"
+    tools:visibility="visible">
+
+
+    <ImageView
+        android:id="@+id/backgroundWelcomeFragmentImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/hitchhikers_book_cover" />
+
+    <TextView
+        android:id="@+id/inNonMartianTextView"
+        android:layout_width="219dp"
+        android:layout_height="59dp"
+        android:layout_marginTop="375dp"
+        android:layout_marginEnd="183dp"
+        android:layout_marginBottom="288dp"
+        android:fontFamily="@font/exo_2_semibold"
+        android:text="@string/non_martian_string"
+        android:textColor="@android:color/holo_red_dark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/appTitleWelcomeFragmentTextView"
+        android:layout_width="303dp"
+        android:layout_height="200dp"
+        android:layout_marginEnd="342dp"
+        android:layout_marginBottom="337dp"
+        android:fontFamily="@font/exo_2_semibold"
+        android:text="@string/app_name"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="34sp"
+        android:textStyle="@string/app_name"
+        android:theme="@style/Theme.HitchhikersWeatherGuideToExtraterrestialSpace"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.356" />
+
+    <Button
+        android:id="@+id/welcomeFragmentToMenuButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="260dp"
+        android:layout_marginTop="646dp"
+        android:layout_marginEnd="63dp"
+        android:layout_marginBottom="37dp"
+        android:background="@android:drawable/editbox_background_normal"
+        android:text="@string/launch_welcome_fragment_string"
+        android:theme="@style/Theme.HitchhikersWeatherGuideToExtraterrestialSpace"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.111"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.222" />
+
+    <TextView
+        android:id="@+id/featureListWelcomeFragmentTextView"
+        android:layout_width="222dp"
+        android:layout_height="180dp"
+        android:layout_marginEnd="180dp"
+        android:background="@color/teal_700"
+        android:fontFamily="@font/exo_2_medium"
+        android:text="@string/feature_list_welcome_fragment_string"
+        android:textColor="@android:color/holo_red_dark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="441dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
