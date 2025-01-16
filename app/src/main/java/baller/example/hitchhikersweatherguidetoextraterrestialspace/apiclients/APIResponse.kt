@@ -39,4 +39,3 @@ open abstract class APIResponse {
 
 
     }
-}

@@ -35,9 +35,11 @@ class WolframAlphaAPIRequest(
         params["i"] = URLEncoder.encode(query, "UTF-8")
         /*default case : metric*/
         params["units"] = "metric"
-        if(previousAlphaAPIResponse != null){
-        if (previousAlphaAPIResponse?.s != null )params["s"] = previousAlphaAPIResponse.s
-            params["conversationID"] = previousAlphaAPIResponse.conversationId
+        if(previousAlphaAPIResponse != null) {
+            if (previousAlphaAPIResponse?.s != null) params["s"] = {
+                previousAlphaAPIResponse.s
+                params["conversationID"] = previousAlphaAPIResponse.conversationId
+            }
         }
     }
 

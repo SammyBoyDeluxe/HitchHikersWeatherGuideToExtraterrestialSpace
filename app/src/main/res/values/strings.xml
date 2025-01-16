@@ -4,6 +4,6 @@
     <string name="feature_list_welcome_fragment_string">  • Martian weather API - Explore the martian weather and plan your extraterrestial visit accordingly! \n \n  • Shallow thought - An algorithm, no matter what input, outputting 42 (beta: might not be functioning at time of writing)\n</string>
     <string name="launch_welcome_fragment_string">Launch!</string>
     <string name="to_martian_weather_api_button_string_menu_fragment">Martian Weather API</string>
-    <string name="shallow_thought_api_button_menu_fragment_string" >Shallow Thought</string>
+    <string name="shallow_thought_api_button_menu_fragment_string">Shallow Thought</string>
     <string name="back_button_text_menu_fragment">Back</string>
 </resources>

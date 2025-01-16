@@ -62,8 +62,8 @@ class MartianWeatherFragment : Fragment() {
             TabRow(selectedTabIndex = selectedTabIndex.value) {
                 for() {
                     Tab(
-                        selected = false
-                                onClick = { },
+                        selected = true,
+                                onClick = {selectedTabIndex.intValue =    },
                         content = DrawWeatherTab(selectedTabIndex)
                     )
                        }
@@ -78,7 +78,9 @@ class MartianWeatherFragment : Fragment() {
     @Composable
     fun DrawWeatherTab(selectedTabIndex: Int, validSolArray: Array<InsightAPIResponse.Sol>) {
         if (validSolArray != null) {
-            val selectedSol = validSolArray.get(selectedTabIndex)
+
+            /*Makes sure that */
+            val selectedSol = validSolArray[selectedTabIndex]
 
             if (selectedSol != null) {
                 Column(
@@ -165,4 +167,3 @@ class MartianWeatherFragment : Fragment() {
     }
 
 
-}
