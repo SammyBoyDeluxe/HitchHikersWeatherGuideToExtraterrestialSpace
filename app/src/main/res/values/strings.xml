@@ -6,4 +6,7 @@
     <string name="to_martian_weather_api_button_string_menu_fragment">Martian Weather API</string>
     <string name="shallow_thought_api_button_menu_fragment_string">Shallow Thought</string>
     <string name="back_button_text_menu_fragment">Back</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="shallow_thought_welcome_text">This part of our program is currently in its beta-version.\\n Our programmers are currently working on the advertised feature : An Algorithm that no matter the input outputs 42. Their labour has so far proved useless. \\n Until the product can be published in its finalized form we offer you this: An algorithm that no matter the question will output an answer, \"Shallow-thought-beta-version\".</string>
 </resources>

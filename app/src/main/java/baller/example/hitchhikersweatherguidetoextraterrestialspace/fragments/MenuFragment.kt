@@ -14,6 +14,9 @@ class MenuFragment : Fragment() {
         fun newInstance() = MenuFragment()
     }
 
+    /**Only used internally for handling configuration changhes, so that they are saved upon exit
+     *
+     */
     private val viewModel: MenuViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {

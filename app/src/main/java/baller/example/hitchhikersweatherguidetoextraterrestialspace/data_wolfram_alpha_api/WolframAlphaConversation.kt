@@ -3,5 +3,10 @@ package baller.example.hitchhikersweatherguidetoextraterrestialspace.data_wolfra
 /**A class intended to save WolframAlphaConversations, an id and a user defined title to identify them
  *
  */
-class WolframAlphaConversation(var title : String,val id : Int, apiRequest: WolframAlphaAPIRequest,apiResponse: WolframAlphaAPIResponse){
+class WolframAlphaConversation(
+    var title: String,
+    val id: Int,
+    var apiRequest: WolframAlphaAPIRequest,
+    var apiResponse: WolframAlphaAPIResponse
+) {
 }

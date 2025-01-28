@@ -3,9 +3,10 @@ package baller.example.hitchhikersweatherguidetoextraterrestialspace.data_wolfra
 /**Object to hold a collection of saved WolframAlphaConversations defined by the id-int of the WolframAlphaConversation
  *
  */
-class WolframAlphaConversationHistory(firstConversation: WolframAlphaConversation,
-                                      override var size: Int = 1
-    ) : Map<Int, WolframAlphaConversation> {
+class WolframAlphaConversationHistory(
+    firstConversation: WolframAlphaConversation,
+    override var size: Int = 1
+) : Map<Int, WolframAlphaConversation> {
 
     // Backing mutable map to hold the conversations
     private val conversationHistory: MutableMap<Int, WolframAlphaConversation> = mutableMapOf()
@@ -51,8 +52,13 @@ class WolframAlphaConversationHistory(firstConversation: WolframAlphaConversatio
     /**Adds a conversation to conversationHistory-object and gives it an internal id
      * of the next possible integer
      */
-    fun addConversation( conversation: WolframAlphaConversation) {
-        conversationHistory[size] = conversation
+    fun addConversation(apiRequest: WolframAlphaAPIRequest, apiResponse: WolframAlphaAPIResponse) {
+        conversationHistory[size] =
+            WolframAlphaConversation("${size}", id = "${size}", apiRequest, apiResponse)
         size++
     }
+
+    operator fun set(selectedConversationId: Int, value: WolframAlphaConversation) {
+        this[selectedConversationId] = value
     }
+}

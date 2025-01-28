@@ -19,7 +19,7 @@ class WolframAlphaAPIRequest(
      *
      * Is not needed if a api-request (instance of this class) is passed to the getContent()-function in the WolframAlphaAPIClient
      */
-     var appId: String?,
+    var appId: String?,
     /**
      * Represents one of two values needed to make an API-request : query (The query we want the API to run)
      */
@@ -35,9 +35,9 @@ class WolframAlphaAPIRequest(
         params["i"] = URLEncoder.encode(query, "UTF-8")
         /*default case : metric*/
         params["units"] = "metric"
-        if(previousAlphaAPIResponse != null) {
-            if (previousAlphaAPIResponse?.s != null) params["s"] = {
-                previousAlphaAPIResponse.s
+        if (previousAlphaAPIResponse != null) {
+            if (previousAlphaAPIResponse.s != null) {
+                params["s"] = previousAlphaAPIResponse.s
                 params["conversationID"] = previousAlphaAPIResponse.conversationId
             }
         }
@@ -70,7 +70,7 @@ class WolframAlphaAPIRequest(
      * "conversationID" : "MSP3811gaeg0eeiih56eg0000068iehc21b6ia0aa6",
      * "host" : "www4b.wolframalpha.com"}
      */
-    fun setIpAddress(ip: String){
+    fun setIpAddress(ip: String) {
         params["ip"] = ip
     }
 
@@ -78,9 +78,9 @@ class WolframAlphaAPIRequest(
      *                false = units in imperial
      */
     fun setUnits(inMetric: Boolean) {
-        if(inMetric)  params["units"] = "metric"
+        if (inMetric) params["units"] = "metric"
         else
-        params["units"] = "imperial"
+            params["units"] = "imperial"
     }
 
     /**
@@ -96,7 +96,7 @@ class WolframAlphaAPIRequest(
      * "s" : "3"}
      *
      */
-    fun setSParameter(sParam: String)  {
+    fun setSParameter(sParam: String) {
         params["s"] = URLEncoder.encode(sParam, "UTF-8")
 
     }
@@ -108,10 +108,11 @@ class WolframAlphaAPIRequest(
      *  or start a new conversation otherwise by calling the base Wolfram Alpha API-url
      */
     fun buildRequestUrl(): URL {
-        var baseUrl : String
-        if(previousAlphaAPIResponse == null)  baseUrl = "http://api.wolframalpha.com/v1/conversation.jsp"
+        var baseUrl: String
+        if (previousAlphaAPIResponse == null) baseUrl =
+            "http://api.wolframalpha.com/v1/conversation.jsp"
         else baseUrl = "http://${previousAlphaAPIResponse.hostUrl}/v1/conversation.jsp"
-        val queryString = params.entries.joinToString("&"){"${it.key}=${it.value}"}
+        val queryString = params.entries.joinToString("&") { "${it.key}=${it.value}" }
         return URL("$baseUrl?$queryString")
     }
 }

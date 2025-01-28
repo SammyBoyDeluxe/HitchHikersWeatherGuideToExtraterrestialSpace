@@ -15,9 +15,14 @@ class WolframAlphaAPIClient : RESTClient {
      *
      */
     override val apikey: String?
+
     /*URI -> URL via Android Studio best practices*/
-    lateinit var  apiURI : URI
-    constructor(baseUrl: String, apikey: String?) {
+    lateinit var apiURI: URI
+
+    constructor(
+        baseUrl: String = "http://api.wolframalpha.com/v1/conversation.jsp",
+        apikey: String? = "53GA4K-H4PU6Q34PJ"
+    ) {
         this.baseUrl = "http://api.wolframalpha.com/v1/conversation.jsp"
         this.apikey = "53GA4K-H4PU6Q34PJ"
         apiURI = URI(baseUrl)
@@ -26,7 +31,7 @@ class WolframAlphaAPIClient : RESTClient {
     /**Exposes the current APIrequest for handling in the client
      *
      */
-    lateinit var currentAPIRequest : WolframAlphaAPIRequest
+    lateinit var currentAPIRequest: WolframAlphaAPIRequest
 
     /** action is an irrelevant parameter in WolframAlphaAPI-Client, since the API only handles gets.
      *
@@ -53,31 +58,35 @@ class WolframAlphaAPIClient : RESTClient {
         apiParamsKeyValueMap: Map<String, Any?>
     ): APIResponse {
         /*Integrates the latest request into the API-Client structure, where setAuthorization and getConnection is dependent on this variable*/
-         currentAPIRequest = apiParamsKeyValueMap["wolframalphaAPIRequest"] as WolframAlphaAPIRequest
+        currentAPIRequest = apiParamsKeyValueMap["wolframalphaAPIRequest"] as WolframAlphaAPIRequest
         setAuthorization()
-        val connection : HttpsURLConnection = getConnection() as HttpsURLConnection
+        val connection: HttpsURLConnection = getConnection() as HttpsURLConnection
 
         /*URL constructed via the APIRequest-class holds the parameters needed*/
-        try{
+        try {
             connection.connect()
             /*If there´s a failure for some reason, this codeblock executes*/
-            if(connection.responseCode != HttpsURLConnection.HTTP_OK){
-                Log.d("appfail", "getContent: line 59 ${connection.responseCode}" )
-            
-            } else if(connection.responseCode == HttpsURLConnection.HTTP_OK){
+            if (connection.responseCode != HttpsURLConnection.HTTP_OK) {
+                Log.d("appfail", "getContent: line 59 ${connection.responseCode}")
+
+            } else if (connection.responseCode == HttpsURLConnection.HTTP_OK) {
                 /*Content type = JSON-stream, a string*/
                 val jsonResponse = connection.getContent() as String
 
-                return APIResponse.fromJsonToAPIResponse(jsonResponse, WolframAlphaAPIResponse::class.java)
-
+                return APIResponse.fromJsonToAPIResponse(
+                    jsonResponse,
+                    WolframAlphaAPIResponse::class.java
+                )
 
 
             }
-        } catch (exception : Exception){
+        } catch (exception: Exception) {
 
-                Log.d("appfail", "getContent (WolframAlphaAPIClient): + Exception thrown: ${exception.message} ")
-        }
-        finally {
+            Log.d(
+                "appfail",
+                "getContent (WolframAlphaAPIClient): + Exception thrown: ${exception.message} "
+            )
+        } finally {
             /*Always disconnect to prevent resource-leak*/
             connection.disconnect()
         }
@@ -104,6 +113,6 @@ class WolframAlphaAPIClient : RESTClient {
      *
      */
     override fun getConnection(): HttpURLConnection {
-       return (currentAPIRequest.buildRequestUrl()).openConnection() as HttpsURLConnection
+        return (currentAPIRequest.buildRequestUrl()).openConnection() as HttpsURLConnection
     }
 }
