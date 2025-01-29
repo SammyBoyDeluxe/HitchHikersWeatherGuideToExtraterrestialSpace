@@ -19,20 +19,28 @@ class ShallowThoughtViewModel : ViewModel() {
     lateinit var conversationHistory: WolframAlphaConversationHistory
     lateinit var listForCompose: MutableList<WolframAlphaConversation>
     lateinit var requestStringFromResponseView: String
+
     var selectedConversationId: MutableState<Int?> = mutableStateOf(null)
 
     /**Used to get any related content to the WolframAlphaAPI, private to enforce viewmodel-behaviour
      */
     private var apiClient = WolframAlphaAPIClient()
     private lateinit var currentApiResponse: WolframAlphaAPIResponse
+    internal var currentAPIResponseState: MutableState<WolframAlphaAPIResponse?> =
+        mutableStateOf(null)
+    internal var currentConversationHistoryState: MutableState<WolframAlphaConversationHistory?> =
+        mutableStateOf(null)
+    var conversationHistoryIsInitalized = mutableStateOf(this::conversationHistory.isInitialized)
+    var apiResponseIsInitialized = mutableStateOf(this::currentApiResponse.isInitialized)
 
 
     /**Gets a response from the WolframAlphaAPIClient, should only be called with some input actually in the TextField
-     * @param requestStringFromResponseView
+     * @param requestStringFromResponseView Will update the internal currentAPIResponseState, currentConversationHistoryState, for use in compose, before calling getResponse() for the first time
+     * -> The (currentApiResponseState, currentConversationHistoryState) == null
      */
-    fun getResponse(requestStringFromResponseView: String): WolframAlphaAPIResponse {
+    fun getResponse(requestStringFromResponseView: String) {
         /*If it is the first conversation -> We just generate a api-response, then we initiate the conversationHistory*/
-        if (!this::conversationHistory.isInitialized) {
+        if (!conversationHistoryIsInitalized.value) {
 
             var wolframAlphaAPIRequest: WolframAlphaAPIRequest = WolframAlphaAPIRequest(
                 previousAlphaAPIResponse = null,
@@ -51,6 +59,8 @@ class ShallowThoughtViewModel : ViewModel() {
                     currentApiResponse
                 )
             )
+            /*After having created the conversationHistory we want to add it as a mutable state so the conversation-history-selector can react dynamically*/
+            currentConversationHistoryState = mutableStateOf(conversationHistory)
             listForCompose = MutableList<WolframAlphaConversation>(
                 init = {
                     return@MutableList conversationHistory[it]!!
@@ -58,15 +68,17 @@ class ShallowThoughtViewModel : ViewModel() {
 
                 }, size = conversationHistory.size
             )
-            return currentApiResponse
-        }/*If not empty we check whether we have any history of the conversation, since then the conversationId is needed for the API*/
+            /*Sets the selected-conversation-id to 0*/
+            selectedConversationId.value = 0
+            currentAPIResponseState = mutableStateOf(currentApiResponse)
+        }/*If the history is initialized that means it is not our first conversation, if the selectedConversationId > conversationHistory.size we want to create a new conversation */
         else {
             /*Upon having initiated conversationHistory we can use the Id to select the appropriate conversation and
             * generate a new request using the WolframAlphaAPIRequest*/
-            if (selectedConversationId != null) {
+            if (selectedConversationId.value != null) {
                 conversationHistory[selectedConversationId.value].let {
-
-                    val newAPIRequest: WolframAlphaAPIRequest =
+                    /*Generates a new API-request with the previous response as template for associated conversation-attributes*/
+                    var newAPIRequest: WolframAlphaAPIRequest =
                         WolframAlphaAPIRequest(it?.apiResponse, null, requestStringFromResponseView)
                     var newAPIResponse = apiClient.getContent(
                         RESTClient.HttpMethods.GET,
@@ -80,7 +92,10 @@ class ShallowThoughtViewModel : ViewModel() {
                             )
                         )
                     }
-                    return newAPIResponse
+                    currentConversationHistoryState = mutableStateOf(conversationHistory)
+                    currentApiResponse = newAPIResponse
+                    currentAPIResponseState = mutableStateOf(currentApiResponse)
+
                 }
             }/*if the selectedConversationId == null, that means its a new conversation*/
             else {
@@ -90,10 +105,13 @@ class ShallowThoughtViewModel : ViewModel() {
                     RESTClient.HttpMethods.GET,
                     mutableMapOf(Pair("wolframalphaAPIRequest", newAPIRequest))
                 ) as WolframAlphaAPIResponse
-
+                /*Add the conversation to the conversation-history for further prompting*/
                 conversationHistory.addConversation(newAPIRequest, newAPIResponse)
+                currentConversationHistoryState = mutableStateOf(conversationHistory)
+                /*Sets the currentAPIResponse to the new Api-response*/
+                currentApiResponse = newAPIResponse
+                currentAPIResponseState = mutableStateOf(currentApiResponse)
 
-                return newAPIResponse
 
             }
 

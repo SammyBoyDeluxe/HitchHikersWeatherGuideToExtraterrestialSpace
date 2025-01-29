@@ -6,11 +6,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.NoIndicationInstance.drawIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -20,20 +23,29 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.ImageBitmapConfig
 import androidx.compose.ui.graphics.ImageShader
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.painter.BrushPainter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.zIndex
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import baller.example.hitchhikersweatherguidetoextraterrestialspace.R
 import baller.example.hitchhikersweatherguidetoextraterrestialspace.data_wolfram_alpha_api.WolframAlphaAPIResponse
 
@@ -57,17 +69,35 @@ class ShallowThoughtFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
+
                 /*Draws a background with the Menu-image as background, on a black colored background, with -3f,-4f respectively*/
-                drawBackground()
+                DrawBackground()
+                Button(onClick = {
+                    findNavController().navigate(R.id.action_shallowThoughtFragment_to_menuFragment)
+
+                }) { Text("Back to menu") }
+                ConversationHistorySelector()
+                /*Automatically updated via mutablestate, set to null at start and then the latest APIResponse thereafter*/
+                ResponseView(viewModel.currentAPIResponseState.value)
 
 
             }
         }
     }
 
+    /**
+     * Called when the Fragment is visible to the user.  This is generally
+     * tied to [Activity.onStart] of the containing
+     * Activity's lifecycle.
+     */
+    override fun onStart() {
+        super.onStart()
+
+    }
+
     /*Draws a background on which we can display*/
     @Composable
-    fun drawBackground() {
+    fun DrawBackground() {
 
         Column(
             modifier = Modifier
@@ -78,31 +108,23 @@ class ShallowThoughtFragment : Fragment() {
                     1f
                 )
                 .zIndex(-4f)
-        ) {
-
-            val imageBrush =
-                ShaderBrush(ImageShader(ImageBitmap.imageResource(id = R.drawable.hitchhikers_triangle_rocketlogo)))
-            /*Draws up the backgroundImage*/
-            Image(
-                BrushPainter(imageBrush),
-                "Background image of a triangle with a rocket on",
-                modifier = Modifier
-                    .fillMaxSize()
-                    .zIndex(-3f)
-            )
-
-
-        }
+                .drawBehind { drawImage(image = Image(Image(painterResource(R.drawable.hitchhikersgreenmanlogo))) },
+            content = {
 
 
     }
 
+
+
+
+
+
     @Composable
-            /**Takes in an API-response, gotten from the view-model, otherwise the functions accepts null to
+            /**Handles the interaction with the VM , otherwise the functions accepts null to
              * show a blank screen with a welcome-text
              *
              */
-    fun responseView(apiResponse: WolframAlphaAPIResponse?) {
+    fun ResponseView(apiResponse: WolframAlphaAPIResponse? = remember { null }) {
         var responseString: String = remember { "" }
         var requestString: String = remember { "" }
         Column(
@@ -127,8 +149,10 @@ class ShallowThoughtFragment : Fragment() {
 
                 )
                 OutlinedButton(onClick = {
-
-                    if (requestString.trim().isNotEmpty()) viewModel.getResponse(requestString)
+                    if (requestString.trim().isNotEmpty()) {
+                        /*generates a new currentApiRequest that can be used in the */
+                        viewModel.getResponse(requestString)
+                    }
 
                 }) {
                     Text("Send request")
@@ -142,30 +166,32 @@ class ShallowThoughtFragment : Fragment() {
 
     }
 
-    /**Given null if conversationHistory isn´t initiated, in that case viewModel is updated
-     *
+    /**Depends internally on the MutableState<Boolean> conversationHistoryIsInitialized, only rendering
+     * a conversationHistorySelector if there is a conversation-history
      */
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun conversationHistorySelector(conversationId: Int?) {
+    fun ConversationHistorySelector() {
 
-        if (ShallowThoughtViewModel::conversationHistory) {
-            PrimaryTabRow(
-                selectedTabIndex = 0,
-                tabs = {
+        if (viewModel.conversationHistoryIsInitalized.value) {
+            viewModel.selectedConversationId.value?.let {
+                PrimaryTabRow(
+                    selectedTabIndex = it,
+                    tabs = {
+                        for (i in 0..<viewModel.conversationHistory.size) {
+                            Tab(
+                                selected = (viewModel.selectedConversationId.value == i),
+                                onClick = { viewModel.selectedConversationId.value = i },
+                                content = {
+                                    Text("Conversation ${i}")
 
-                    Tab(
-                        selected = 0,
-                        onClick = { viewModel.selectedConversationId = 0 },
-                        content = {
-                            Text("Conversation 1")
-
+                                }
+                            )
                         }
-                    )
 
-
-                }
-            )
+                    }
+                )
+            }
         }
 
     }

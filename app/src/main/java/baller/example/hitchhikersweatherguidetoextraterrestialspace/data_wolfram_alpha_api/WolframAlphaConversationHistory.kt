@@ -54,7 +54,7 @@ class WolframAlphaConversationHistory(
      */
     fun addConversation(apiRequest: WolframAlphaAPIRequest, apiResponse: WolframAlphaAPIResponse) {
         conversationHistory[size] =
-            WolframAlphaConversation("${size}", id = "${size}", apiRequest, apiResponse)
+            WolframAlphaConversation("${size}", id = size, apiRequest, apiResponse)
         size++
     }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.HitchhikersWeatherGuideToExtraterrestialSpace" parent="android:Theme.Material.Light.NoActionBar">
+    <style name="Theme.HitchhikersWeatherGuideToExtraterrestialSpace" parent="android:Theme.Holo.Light.DarkActionBar">
         <!-- Primary colors -->
         <item name="colorPrimary">#030303</item> <!-- Dark base -->
         <item name="colorPrimaryVariant">#020202</item> <!-- Slightly lighter dark gray -->
@@ -9,7 +9,8 @@
 
         <!-- Secondary colors -->
         <item name="colorSecondary">#74B8CB</item> <!-- Light blue -->
-        <item name="colorSecondaryVariant">#5AA7B8</item> <!-- Slightly darker variant of light blue -->
+        <item name="colorSecondaryVariant">#5AA7B8
+        </item> <!-- Slightly darker variant of light blue -->
         <item name="colorOnSecondary">#FFFFFF</item> <!-- White for text on secondary -->
 
         <!-- Background and surface -->
