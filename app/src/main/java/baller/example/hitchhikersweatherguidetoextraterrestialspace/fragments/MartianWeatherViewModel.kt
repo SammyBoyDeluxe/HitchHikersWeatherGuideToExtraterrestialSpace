@@ -10,12 +10,12 @@ import baller.example.hitchhikersweatherguidetoextraterrestialspace.data_insight
 /**Handles ViewModel-related tasks via V-VM-M(View-ViewModel-Model)
  * -pattern
  */
-class MartianWeatherViewModel(var fragment: MartianWeatherFragment) : ViewModel() {
+class MartianWeatherViewModel : ViewModel() {
     /**Represents the (currently) selected tab´s index
      * in the weather-report Composable-function
      *
      */
-    var selectedWeekTabIndex = mutableIntStateOf(0)
+    var selectedWeekTabIndex = mutableIntStateOf(1)
 
     /**A saved mutableIntState, this can be changed and will call for recomposition within any
      * Composable it is part of. Represents the selected MartianDay, in the selected Martian week

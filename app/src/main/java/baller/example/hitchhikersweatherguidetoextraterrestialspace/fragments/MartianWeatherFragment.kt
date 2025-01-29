@@ -56,7 +56,7 @@ class MartianWeatherFragment() : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
+        currentWeatherReportList = viewModel.getContent()
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
@@ -79,7 +79,7 @@ class MartianWeatherFragment() : Fragment() {
                 PrimaryTabRow(
                     selectedTabIndex = remember { viewModel.selectedWeekTabIndex.intValue },
                     tabs = {
-                        for (i in 0..wholeMartianWeeks) {
+                        for (i in 0..<wholeMartianWeeks) {
 
                             Tab(
                                 selected = (viewModel.selectedWeekTabIndex.intValue == i),

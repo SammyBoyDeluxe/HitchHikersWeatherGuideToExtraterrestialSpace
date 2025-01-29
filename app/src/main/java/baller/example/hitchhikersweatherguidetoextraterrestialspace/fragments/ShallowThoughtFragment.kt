@@ -19,7 +19,10 @@ import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
@@ -103,9 +106,9 @@ class ShallowThoughtFragment : Fragment() {
              * show a blank screen with a welcome-text
              *
              */
-    fun ResponseView(apiResponse: WolframAlphaAPIResponse? = remember { null }) {
-        var responseString: String = remember { "" }
-        var requestString: String = remember { "" }
+    fun ResponseView(apiResponse: WolframAlphaAPIResponse?) {
+        var responseString: String by remember { mutableStateOf("") }
+        var requestString: String by remember { mutableStateOf("") }
         Column(
             Modifier
                 .fillMaxSize(0.6f)
