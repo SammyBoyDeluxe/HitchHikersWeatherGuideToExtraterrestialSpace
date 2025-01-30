@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onCompletion
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
@@ -21,6 +22,9 @@ import javax.net.ssl.HttpsURLConnection
 class NASAInsightAPIClient(
     override val baseUrl: String = "https://api.nasa.gov/insight_weather/?feedtype=json&ver=1.0",
     override val apikey: String? = "aFRTG7YOW56OpdB5Fc4DBVkPuCfu9Hybz8y1qub4",
+    /**Optimized dispatcher for I/O-operations.
+     *
+     */
     override var ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : RESTClient {
 
@@ -34,8 +38,9 @@ class NASAInsightAPIClient(
         apiURI = URI(baseUrl)
     }
 
-    /**Returns an InsightAPIResponse object parsed from the API-call if connection is successful,
-     *  returns an empty InsightAPIResponse instance otherwise = InsightAPIResponse(emptyList(), emptyList(), emptyArray())
+    /**Returns a  Flow<InsightAPIResponse> object parsed from the API-call if connection is successful,
+     *  returns an empty InsightAPIResponse instance otherwise = InsightAPIResponse(emptyList(), emptyList(), emptyArray()).
+     *  Also throws any exception occuring along the way
      */
 
 
@@ -45,47 +50,47 @@ class NASAInsightAPIClient(
     ): Flow<APIResponse> {
         var connection: HttpsURLConnection = getConnection() as HttpsURLConnection
         var apiFlow: Flow<InsightAPIResponse> = flow<InsightAPIResponse> {
-            try {
-                /*request-method, sets the HTTP-action, always get on NasaInsightAPI*/
-                connection.requestMethod = action.toString()
-                /*Not needed, for clarity - The doInput-field represents the HTTPs-request ability to getInput (from upstream datastream) */
-                connection.doInput = true
-                /*If we recieve a valid response, we return that response*/
-                if (connection.responseCode == HttpsURLConnection.HTTP_OK) {
-                    val reader = BufferedReader(InputStreamReader(connection.inputStream))
-                    val response =
-                        reader.use { it.readText() } // Read the entire stream as a string
 
 
-                    return@flow APIResponse.fromJsonToAPIResponse(
+            /*request-method, sets the HTTP-action, always get on NasaInsightAPI*/
+            connection.requestMethod = action.toString()
+            /*Not needed, for clarity - The doInput-field represents the HTTPs-request ability to getInput (from upstream datastream) */
+            connection.doInput = true
+            /*If we recieve a valid response, we return that response*/
+
+            val isValidConnection: Boolean = connection.responseCode == HttpsURLConnection.HTTP_OK
+
+            if (isValidConnection) {
+                val reader = BufferedReader(InputStreamReader(connection.inputStream))
+                val response =
+                    reader.use { it.readText() } // Read the entire stream as a string
+
+
+                this.emit(
+                    APIResponse.fromJsonToAPIResponse(
                         response,
                         InsightAPIResponse::class.java
                     )
-                }
-                /*Else we return the HTTPS-failure-code*/
-                else {
-                    Log.d(
-                        "applicationfailure",
-                        "getContent(NASAInsightAPIClient - Line : 41)  : Error: Received HTTP response code ${connection.responseCode}"
-                    )
-
-                }
-            } catch (e: Exception) {
-                Log.d(
-                    "applicationfailure",
-                    "getContent() (NasaInsigtAPIClient) :\n Error: ${e.message}"
                 )
-
-
-            } finally {
-                /*Finally-blocks always run, no matter the results of previous try/catch-blocks hence we disconnect, this prevents memory leakage*/
-                connection.disconnect()
+            } else {
+                emit(InsightAPIResponse(emptyList(), emptyList(), emptyArray()))
+                throw Throwable("HTTPResponseCode: ${isValidConnection}")
             }
-            return@flow InsightAPIResponse(emptyList(), emptyList(), emptyArray())
-        }.flowOn(ioDispatcher).catch {
+        }.catch { exception ->
+            this.emit(InsightAPIResponse(emptyList(), emptyList(), emptyArray()))
+            Log.d(
+                "NasaInsightAPIClient",
+                "getContent in NasaInsightAPIClient: ${exception.message}"
+            )
+            throw exception
 
-            
-        }
+        }.onCompletion {
+            /*Will run in main*/
+            connection.disconnect()
+        }.flowOn(this.ioDispatcher)
+
+        return apiFlow
+
 
     }
 
