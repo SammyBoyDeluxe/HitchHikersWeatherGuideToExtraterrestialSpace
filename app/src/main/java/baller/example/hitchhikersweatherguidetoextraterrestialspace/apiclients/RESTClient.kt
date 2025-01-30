@@ -1,27 +1,38 @@
 package baller.example.hitchhikersweatherguidetoextraterrestialspace.apiclients
 
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
 import java.net.HttpURLConnection
 
 interface RESTClient {
     /**Gives the base host url upon which we perform our actions on endpoints therein
      *
      */
-     val baseUrl : String
+    val baseUrl: String
 
     /**A string with the API-key, if such is needed for the API-implementation
      * ; Otherwise null
      */
-    val apikey : String?
+    val apikey: String?
+
+    /**Used to make sure we don´t change CoRoutineContexts and as a result can´t emit values
+     *
+     */
+    var ioDispatcher: CoroutineDispatcher
+
 
     /**Represents getting content on a map of parameter values and their associated keys
      *  relevant to the API
      *
      * -> The RESTclient performs the action on the baseurl with set parameters.
      *
-     * Returns a baller.example.... .apiclients.APIResponse object
+     * Returns a Flow<baller.example.... .apiclients.APIResponse> object
      *
      */
-    public abstract fun getContent(action : HttpMethods, apiParamsKeyValueMap : Map<String,Any?>) : APIResponse
+    public abstract fun getContent(
+        action: HttpMethods,
+        apiParamsKeyValueMap: Map<String, Any?>
+    ): Flow<APIResponse>
 
     /**Can be used to set authorization, whether it be via APIkey, SSL/TSL-configuration
      * or the like
@@ -31,7 +42,7 @@ interface RESTClient {
     /**Gets a connection to the API-Url, can be directly cast as
      *  HTTPsUrlConnection
      */
-    fun getConnection() : HttpURLConnection
+    fun getConnection(): HttpURLConnection
 
     /**
      *      Represents the HTTP-actions associated with HTTP and HTTPS-requests
@@ -40,15 +51,15 @@ interface RESTClient {
      *      RESTClient.getContent()
      *
      */
-    enum class HttpMethods(stringIn : String) {
+    enum class HttpMethods(stringIn: String) {
 
-             GET("GET"),
-             POST("POST"),
-             HEAD("HEAD"),
-             OPTIONS("OPTIONS"),
-             PUT("PUT"),
-             DELETE("DELETE"),
-             TRACE("TRACE");
+        GET("GET"),
+        POST("POST"),
+        HEAD("HEAD"),
+        OPTIONS("OPTIONS"),
+        PUT("PUT"),
+        DELETE("DELETE"),
+        TRACE("TRACE");
 
     }
 }

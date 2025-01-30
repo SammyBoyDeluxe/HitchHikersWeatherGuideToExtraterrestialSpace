@@ -3,6 +3,8 @@ package baller.example.hitchhikersweatherguidetoextraterrestialspace.apiclients
 import android.util.Log
 import baller.example.hitchhikersweatherguidetoextraterrestialspace.data_wolfram_alpha_api.WolframAlphaAPIRequest
 import baller.example.hitchhikersweatherguidetoextraterrestialspace.data_wolfram_alpha_api.WolframAlphaAPIResponse
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import java.net.HttpURLConnection
 import java.net.URI
 import java.net.URL
@@ -21,10 +23,12 @@ class WolframAlphaAPIClient : RESTClient {
 
     constructor(
         baseUrl: String = "http://api.wolframalpha.com/v1/conversation.jsp",
-        apikey: String? = "53GA4K-H4PU6Q34PJ"
+        apikey: String? = "53GA4K-H4PU6Q34PJ",
+        ioDispatcher: CoroutineDispatcher = Dispatchers.IO
     ) {
         this.baseUrl = "http://api.wolframalpha.com/v1/conversation.jsp"
         this.apikey = "53GA4K-H4PU6Q34PJ"
+        this.ioDispatcher = ioDispatcher
         apiURI = URI(baseUrl)
     }
 
@@ -56,7 +60,7 @@ class WolframAlphaAPIClient : RESTClient {
     override fun getContent(
         action: RESTClient.HttpMethods,
         apiParamsKeyValueMap: Map<String, Any?>
-    ): APIResponse {
+    ): Flow<APIResponse> {
         /*Integrates the latest request into the API-Client structure, where setAuthorization and getConnection is dependent on this variable*/
         currentAPIRequest = apiParamsKeyValueMap["wolframalphaAPIRequest"] as WolframAlphaAPIRequest
         setAuthorization()

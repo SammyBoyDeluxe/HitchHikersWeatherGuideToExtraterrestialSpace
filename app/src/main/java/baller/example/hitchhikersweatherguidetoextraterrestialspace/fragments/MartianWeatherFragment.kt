@@ -32,6 +32,7 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.util.fastRoundToInt
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.liveData
 import baller.example.hitchhikersweatherguidetoextraterrestialspace.data_insight_api.InsightAPIResponse
 
 /** Handles View (V-VM-M-pattern) for the Martian Weather API
@@ -60,6 +61,7 @@ class MartianWeatherFragment() : Fragment() {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
+                liveData<>()
                 DrawWeatherReport()
             }
         }

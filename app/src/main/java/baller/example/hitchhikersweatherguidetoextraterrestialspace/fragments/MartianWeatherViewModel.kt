@@ -2,10 +2,12 @@ package baller.example.hitchhikersweatherguidetoextraterrestialspace.fragments
 
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import baller.example.hitchhikersweatherguidetoextraterrestialspace.apiclients.NASAInsightAPIClient
 import baller.example.hitchhikersweatherguidetoextraterrestialspace.apiclients.RESTClient
 import baller.example.hitchhikersweatherguidetoextraterrestialspace.data_insight_api.InsightAPIResponse
+import kotlinx.coroutines.flow.Flow
 
 /**Handles ViewModel-related tasks via V-VM-M(View-ViewModel-Model)
  * -pattern
@@ -15,7 +17,7 @@ class MartianWeatherViewModel : ViewModel() {
      * in the weather-report Composable-function
      *
      */
-    var selectedWeekTabIndex = mutableIntStateOf(1)
+    var selectedWeekTabIndex = mutableIntStateOf(0)
 
     /**A saved mutableIntState, this can be changed and will call for recomposition within any
      * Composable it is part of. Represents the selected MartianDay, in the selected Martian week
@@ -42,8 +44,12 @@ class MartianWeatherViewModel : ViewModel() {
     var inFahrenheit = mutableStateOf(true)
 
 
-    lateinit var currentWeatherData: InsightAPIResponse
+    var apiFlow: Flow
+    var responseObserver: Observer<InsightAPIResponse> = Observer {
 
+        nasaInsightAPIClient.getContent(RESTClient.HttpMethods.GET, mapOf(Pair("1", 2)))
+    }
+    lateinit var currentWeatherData: InsightAPIResponse
 
     /**Returns all of the valid sols inside an InsightAPIResponse, the response to the request with the specified parameters (does not work due to API-
      * being out of use)
