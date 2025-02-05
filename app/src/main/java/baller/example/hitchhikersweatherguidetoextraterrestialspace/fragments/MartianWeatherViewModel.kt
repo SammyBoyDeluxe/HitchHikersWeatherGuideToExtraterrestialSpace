@@ -4,10 +4,12 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import baller.example.hitchhikersweatherguidetoextraterrestialspace.apiclients.NASAInsightAPIClient
 import baller.example.hitchhikersweatherguidetoextraterrestialspace.apiclients.RESTClient
 import baller.example.hitchhikersweatherguidetoextraterrestialspace.data_insight_api.InsightAPIResponse
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
 
 /**Handles ViewModel-related tasks via V-VM-M(View-ViewModel-Model)
  * -pattern
@@ -44,11 +46,8 @@ class MartianWeatherViewModel : ViewModel() {
     var inFahrenheit = mutableStateOf(true)
 
 
-    var apiFlow: Flow
-    var responseObserver: Observer<InsightAPIResponse> = Observer {
 
-        nasaInsightAPIClient.getContent(RESTClient.HttpMethods.GET, mapOf(Pair("1", 2)))
-    }
+
     lateinit var currentWeatherData: InsightAPIResponse
 
     /**Returns all of the valid sols inside an InsightAPIResponse, the response to the request with the specified parameters (does not work due to API-
@@ -62,7 +61,7 @@ class MartianWeatherViewModel : ViewModel() {
         currentWeatherData = nasaInsightAPIClient.getContent(
             RESTClient.HttpMethods.GET,
             apiParamsKeyValueMap
-        ) as InsightAPIResponse
+        ).flatMapLatest {  }
         /*A string arrat holding the index of valid sols (martian days) inside the request*/
         var validSolKeys = currentWeatherData!!.solKeyCollection
 

@@ -5,6 +5,7 @@ import baller.example.hitchhikersweatherguidetoextraterrestialspace.data_insight
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -54,11 +55,13 @@ class NASAInsightAPIClient(
 
             /*request-method, sets the HTTP-action, always get on NasaInsightAPI*/
             connection.requestMethod = action.toString()
-            /*Not needed, for clarity - The doInput-field represents the HTTPs-request ability to getInput (from upstream datastream) */
+            /*Not needed, is there for clarity - The doInput-field represents the HTTPs-request ability to getInput (from upstream datastream) */
             connection.doInput = true
+
+
             /*If we recieve a valid response, we return that response*/
 
-            val isValidConnection: Boolean = connection.responseCode == HttpsURLConnection.HTTP_OK
+            val isValidConnection: Boolean = (connection.responseCode == HttpsURLConnection.HTTP_OK)
 
             if (isValidConnection) {
                 val reader = BufferedReader(InputStreamReader(connection.inputStream))
